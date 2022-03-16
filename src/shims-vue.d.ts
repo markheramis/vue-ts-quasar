@@ -2,6 +2,7 @@
 
 /// <reference types="vite/client" />
 /// <reference types="vue/ref-macros" />
+/// <reference path="../auto-imports.d.ts" />
 
 // Mocks all files ending in `.vue` showing them as plain Vue instances
 declare module '*.vue' {
