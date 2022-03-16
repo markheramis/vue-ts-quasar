@@ -11,7 +11,6 @@
 
 const { configure } = require('quasar/wrappers');
 const path = require('path')
-const userViteConfig = require('./vite.config')
 
 module.exports = configure(function (/* ctx */) {
   return {
