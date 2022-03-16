@@ -14,6 +14,7 @@
     "allowJs": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "isolatedModules": false,
     "lib": [
       "esnext", 
       "dom",
@@ -48,7 +49,8 @@
     },
     "types": [
       "@types/node",
-      "@quasar/app-vite"
+      "@quasar/app-vite",
+      "vitest/globals"
     ]
   },
   "include": [
