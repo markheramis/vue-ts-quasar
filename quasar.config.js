@@ -10,7 +10,7 @@
 
 
 const { configure } = require('quasar/wrappers');
-const path = require('path')
+const userViteConfig = require('./vitest.config')
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -79,23 +79,8 @@ module.exports = configure(function (/* ctx */) {
       // viteVuePluginOptions: {},
       // extendViteConf (viteConf) {},
       extendViteConf: (config) => {
-        config.resolve = {
-          alias: {
-            '@': path.join(__dirname, 'src'),
-            'app': path.join(__dirname, '.'),
-            'src': path.join(__dirname, 'src'),
-            'layouts': path.join(__dirname, 'src/layouts'),
-            'components': path.join(__dirname, 'src/components'),
-            'pages': path.join(__dirname, 'src/pages'),
-            'stores': path.join(__dirname, 'src/stores'),
-          }
-        },
-        config.test = {
-          globals: true,
-          environment: 'jsdom',
-        }
+        Object.assign(config, userViteConfig)
       },
-
       // vitePlugins: [
       //   [ 'package-name', { ..options.. } ]
       // ]
