@@ -21,8 +21,9 @@ describe(
       'sanity check',
       () => {
         const wrapper = createWrapper()
+        const exmpl = wrapper.findComponent({ ref: 'exmpl' })
 
-        console.log(wrapper)
+        console.log(exmpl.props())
       }
     )
   }
