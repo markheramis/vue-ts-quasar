@@ -11,6 +11,7 @@
 
 const { configure } = require('quasar/wrappers');
 const path = require('path')
+const userViteConfig = require('./vite.config')
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -78,11 +79,22 @@ module.exports = configure(function (/* ctx */) {
 
       // viteVuePluginOptions: {},
       // extendViteConf (viteConf) {},
-      extendViteConf (config) {
-        Object.assign(config.resolve.alias, {
-          '@': path.join(__dirname, 'src'),
-          'components': path.join(__dirname, 'src/components')
-        })
+      extendViteConf: (config) => {
+        config.resolve = {
+          alias: {
+            '@': path.join(__dirname, 'src'),
+            'app': path.join(__dirname, '.'),
+            'src': path.join(__dirname, 'src'),
+            'layouts': path.join(__dirname, 'src/layouts'),
+            'components': path.join(__dirname, 'src/components'),
+            'pages': path.join(__dirname, 'src/pages'),
+            'stores': path.join(__dirname, 'src/stores'),
+          }
+        },
+        config.test = {
+          globals: true,
+          environment: 'jsdom',
+        }
       },
 
       // vitePlugins: [
@@ -102,11 +114,16 @@ module.exports = configure(function (/* ctx */) {
               /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
               /\.vue$/, /\.vue\?vue/, // .vue
               /\.md$/, // .md
+              /\.spec\.ts$/
             ],
             /* Global imports to register
              * into the app.
              */
-            imports: ['vue', 'pinia'],
+            imports: [
+              'vue',
+              'pinia'
+            ],
+            dts: true
           }
         ]
       ]
@@ -115,7 +132,7 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
-      open: true // opens browser window automatically
+      open: false // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
