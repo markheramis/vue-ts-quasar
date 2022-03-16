@@ -10,7 +10,7 @@
 
 
 const { configure } = require('quasar/wrappers');
-const userViteConfig = require('./vitest.config')
+const path = require('path')
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -77,13 +77,22 @@ module.exports = configure(function (/* ctx */) {
       // distDir
 
       // viteVuePluginOptions: {},
-      // extendViteConf (viteConf) {},
-      extendViteConf: (config) => {
-        Object.assign(config, userViteConfig)
-      },
       // vitePlugins: [
       //   [ 'package-name', { ..options.. } ]
       // ]
+      // extendViteConf (viteConf) {},
+      extendViteConf: (config) => {
+        config.resolve.alias = {
+          '@': path.join(__dirname, 'src'),
+          'app': path.join(__dirname, '.'),
+          'src': path.join(__dirname, 'src'),
+          'pages': path.join(__dirname, 'src/pages'),
+          'components': path.join(__dirname, 'src/components'),
+          'layouts': path.join(__dirname, 'src/layouts'),
+          'assets': path.join(__dirname, 'src/assets'),
+          'stores': path.join(__dirname, 'src/stores'),
+        } 
+      },
       vitePlugins: [
         [
           /* Auto import APIs on-demand for Vite with TS support.
@@ -91,15 +100,6 @@ module.exports = configure(function (/* ctx */) {
            */
           'unplugin-auto-import/vite',
           { 
-            /* Targets to transform
-             *
-             */
-            include: [
-              /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
-              /\.vue$/, /\.vue\?vue/, // .vue
-              /\.md$/, // .md
-              /\.spec\.ts$/
-            ],
             /* Global imports to register
              * into the app.
              */
