@@ -6,9 +6,11 @@
   "author": "psi <cyril@wendyourway.com>",
   "private": true,
   "scripts": {
+    "dev": "quasar dev",
+    "build": "quasar clean && quasar build",
+    "deploy": "push-dir --dir=dist/spa --remote=origin --branch=deploy",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
-    "deploy": "push-dir --dir=dist/spa --remote=origin --branch=deploy",
     "test:unit": "vitest --config './vitest.config.ts'",
     "coverage": "vitest run --coverage"
   },
