@@ -107,7 +107,7 @@ module.exports = configure(function (/* ctx */) {
               'vue',
               'pinia'
             ],
-            dts: true
+            dts: './src/auto-imports.d.ts'
           }
         ]
       ]
