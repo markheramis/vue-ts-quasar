@@ -1,10 +1,10 @@
 export interface Todo {
-  id: number;
-  content: string;
+  id: number
+  content: string
 }
 
 export interface Meta {
-  totalCount: number;
+  totalCount: number
 }
 
 export const gg = 'ggg'

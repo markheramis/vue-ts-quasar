@@ -15,53 +15,19 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "isolatedModules": false,
-    "lib": [
-      "esnext", 
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ],
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "app/*": [
-        "*"
-      ],
-      "components/*": [
-        "./src/components/*"
-      ],
-      "layouts/*": [
-        "src/layouts/*"
-      ],
-      "pages/*": [
-        "src/pages/*"
-      ],
-      "assets/*": [
-        "src/assets/*"
-      ],
-      "boot/*": [
-        "src/boot/*"
-      ],
-      "stores/*": [
-        "src/stores/*"
-      ]
+      "@/*": ["./src/*"],
+      "app/*": ["*"],
+      "components/*": ["./src/components/*"],
+      "layouts/*": ["src/layouts/*"],
+      "pages/*": ["src/pages/*"],
+      "assets/*": ["src/assets/*"],
+      "boot/*": ["src/boot/*"],
+      "stores/*": ["src/stores/*"]
     },
-    "types": [
-      "@types/node",
-      "@quasar/app-vite",
-      "vitest/globals"
-    ]
+    "types": ["@types/node", "@quasar/app-vite", "vitest/globals"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.js"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules", "dist", "**/*.js"]
 }

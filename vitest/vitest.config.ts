@@ -11,25 +11,25 @@ export default defineConfig({
     vue(),
     AutoImport({
       imports: ['vue', 'vitest', 'pinia'],
-      dts: './vitest/vitest-auto-imports.d.ts'
-    })
+      dts: './vitest/vitest-auto-imports.d.ts',
+    }),
   ],
   resolve: {
     alias: {
       '@': path.join(__dirname, '../src'),
-      'app': path.join(__dirname, '..'),
-      'src': path.join(__dirname, '../src'),
-      'components': path.join(__dirname, '../src/components'),
-      'css': path.join(__dirname, '../css'),
-      'layouts': path.join(__dirname, '../src/layouts'),
-      'pages': path.join(__dirname, '../src/pages'),
-      'router': path.join(__dirname, '../src/router'),
-      'stores': path.join(__dirname, '../src/stores'),
-    }
+      app: path.join(__dirname, '..'),
+      src: path.join(__dirname, '../src'),
+      components: path.join(__dirname, '../src/components'),
+      css: path.join(__dirname, '../css'),
+      layouts: path.join(__dirname, '../src/layouts'),
+      pages: path.join(__dirname, '../src/pages'),
+      router: path.join(__dirname, '../src/router'),
+      stores: path.join(__dirname, '../src/stores'),
+    },
   },
   test: {
     globals: true,
     environment: 'jsdom',
-    exclude: [...configDefaults.exclude]
-  }
+    exclude: [...configDefaults.exclude],
+  },
 })
