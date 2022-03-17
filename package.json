@@ -11,7 +11,7 @@
     "deploy": "push-dir --dir=dist/spa --remote=origin --branch=deploy",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
-    "test:unit": "vitest --config './vitest.config.ts'",
+    "test:unit": "vitest --config './vitest/vitest.config.ts'",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
