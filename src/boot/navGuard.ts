@@ -4,13 +4,11 @@ import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import useUserStore from '@/stores/user'
 import { getToken } from '@/utils/storage'
 
-
 /* Turn off loading spinner
  *
  */
-  
-NProgress.configure({ showSpinner: false })
 
+NProgress.configure({ showSpinner: false })
 
 /* Define routes accessible by unauthenticated
  * app users.
@@ -18,17 +16,15 @@ NProgress.configure({ showSpinner: false })
 
 const whiteList = ['/login', 'auth-redirect']
 
-
 /**
  * Callback function to pass on beforeGuard hook.
  */
 
-const beforeGuard = async(
+const beforeGuard = async (
   to: RouteLocationNormalized,
   _: RouteLocationNormalized,
-  next: NavigationGuardNext 
+  next: NavigationGuardNext
 ) => {
-
   /**
    * Instantiate user store
    */
@@ -58,7 +54,7 @@ const beforeGuard = async(
           // Hack: ensure addRoutes is complete
           // Set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
-        } catch(err) {
+        } catch (err) {
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }
@@ -79,8 +75,6 @@ const beforeGuard = async(
   }
 }
 
-
-
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ router }) => {
@@ -89,15 +83,13 @@ export default boot(async ({ router }) => {
    */
 
   router.beforeEach(beforeGuard)
-  
-  
+
   /**
    * Set nprogress to done when route is resolved. Also
    * set the app title.
    */
 
   router.afterEach((to: RouteLocationNormalized) => {
-
     // Finish progress bar
     // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     NProgress.done()
@@ -110,4 +102,3 @@ export default boot(async ({ router }) => {
     */
   })
 })
-

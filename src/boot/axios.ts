@@ -1,4 +1,4 @@
-import { boot } from 'quasar/wrappers';
+import { boot } from 'quasar/wrappers'
 import axios, { AxiosInstance } from 'axios'
 import { getToken } from '@/utils/storage'
 
@@ -31,8 +31,7 @@ api.interceptors.request.use(
 // Response Interceptors
 api.interceptors.response.use(
   (response) => {
-    if (response.data)
-      return response.data
+    if (response.data) return response.data
 
     return Promise.reject(response)
   },
@@ -42,13 +41,13 @@ api.interceptors.response.use(
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
-  app.config.globalProperties.$axios = axios;
+  app.config.globalProperties.$axios = axios
   // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
   //       so you won't necessarily have to import axios in each vue file
 
-  app.config.globalProperties.$api = api;
+  app.config.globalProperties.$api = api
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
-});
+})
 
 export { api }

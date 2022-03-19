@@ -2,7 +2,6 @@ import { RouteRecordRaw } from 'vue-router'
 import Layout from 'layouts/MainLayout.vue'
 
 const constantRoutes: RouteRecordRaw[] = [
-
   {
     path: '/login',
     component: () => import('pages/auth/login/LoginIndex.vue'),
@@ -13,37 +12,35 @@ const constantRoutes: RouteRecordRaw[] = [
     component: Layout,
     redirect: '/dashboard',
     children: [
-      { 
+      {
         path: 'dashboard',
         component: () => import('pages/IndexPage.vue'),
         name: 'Dashboard',
         meta: {
           title: 'dashboard',
           icon: 'dashboard',
-          affix: true
-        }
-      }
+          affix: true,
+        },
+      },
     ],
   },
-
 ]
 
 export const asyncRoutes: RouteRecordRaw[] = [
-
   {
     path: '/user',
     component: Layout,
     redirect: '/user/index',
     children: [
-      { 
+      {
         path: 'index',
         component: () => import('pages/user/UserIndex.vue'),
         name: 'User',
         meta: {
           title: 'user',
-          icon: 'user'
-        }
-      }
+          icon: 'user',
+        },
+      },
     ],
   },
 
@@ -53,8 +50,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     path: '/:catchAll(.*)*',
     name: 'NotFound',
     component: () => import('pages/ErrorNotFound.vue'),
-  }
-
+  },
 ]
 
 export default constantRoutes

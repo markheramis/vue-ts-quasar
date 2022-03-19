@@ -1,7 +1,6 @@
 import { store } from 'quasar/wrappers'
 import { createPinia } from 'pinia'
 
-
 /*
  * If not building with SSR mode, you can
  * directly export the Store instantiation;

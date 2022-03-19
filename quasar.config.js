@@ -11,7 +11,6 @@
 const { configure } = require('quasar/wrappers')
 const path = require('path')
 
-
 module.exports = configure(function (/* ctx */) {
   return {
     eslint: {
@@ -29,10 +28,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: [
-      'axios',
-      'navGuard',
-    ],
+    boot: ['axios', 'navGuard'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -53,11 +49,10 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
-      env: process.env.NODE_ENV === 'development'
-        ?
-        require('dotenv').config({ path: './.env.development' }).parsed
-        :
-        require('dotenv').config({ path: './.env.production' }).parsed,
+      env:
+        process.env.NODE_ENV === 'development'
+          ? require('dotenv').config({ path: './.env.development' }).parsed
+          : require('dotenv').config({ path: './.env.production' }).parsed,
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node14',
@@ -129,9 +124,9 @@ module.exports = configure(function (/* ctx */) {
           `.replace(/\s+/g, ''),
           changeOrigin: true,
           ws: true,
-          rewrite: (path) => path.replace(process.env.SERVER_BASEURL, '')
+          rewrite: (path) => path.replace(process.env.SERVER_BASEURL, ''),
         },
-      }
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -149,11 +144,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [
-        'Cookies',
-        'LocalStorage',
-        'SessionStorage'
-      ],
+      plugins: ['Cookies', 'LocalStorage', 'SessionStorage'],
     },
 
     // animations: 'all', // --- includes all animations

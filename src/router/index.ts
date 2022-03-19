@@ -8,7 +8,6 @@ import {
 
 import routes from './routes'
 
-
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
