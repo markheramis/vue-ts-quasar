@@ -98,11 +98,12 @@ const GetUserInfo = async () => {
     authy_verified,
     default_auth_factor,
   } = data
-  const roles = data.roles as string[]
+  /* eslint-disable-next-line */
+  const roles = data.roles as any[]
 
   if (!roles) throw Error('GetUserInfo: roles must be a non-null array!')
   roles.forEach((role) => {
-    store.roles.push(role)
+    store.roles.push(role.slug)
   })
 
   store.id = id
