@@ -1,5 +1,5 @@
 <template>
   <div>
-    User Index
+    Role Index 
   </div>
 </template>
