@@ -50,16 +50,25 @@ const toggleDrawerShow = () => {
         auto-close
         class="topheader__actions"
       >
-        <q-list style="min-width: 100px">
-          <q-item clickable>
-            <q-item-section>Account Settings</q-item-section>
+        <q-list style="min-width: 200px">
+          <q-item clickable dense padding>
+            <q-item-section class='text-body2 text-weight-light'>Account Settings</q-item-section>
+            <q-item-section avatar>
+              <q-icon name='settings' size='xs' />
+            </q-item-section>
           </q-item>
           <q-item clickable>
-            <q-item-section>Support</q-item-section>
+            <q-item-section class='text-body2 text-weight-light'>Support</q-item-section>
+            <q-item-section avatar>
+              <q-icon name='support' size='xs' />
+            </q-item-section>
           </q-item>
           <q-separator />
           <q-item clickable @click="logout">
-            <q-item-section>Logout</q-item-section>
+            <q-item-section class='text-body2 text-weight-light'>Logout</q-item-section>
+            <q-item-section avatar>
+              <q-icon name='logout' size='xs' />
+            </q-item-section>
           </q-item>
         </q-list>
       </q-menu>
