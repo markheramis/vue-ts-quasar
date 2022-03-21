@@ -1,5 +1,5 @@
 import { getUserInfo, login } from '@/api/users'
-import { setToken, Token } from '@/utils/storage'
+import { removeToken, setToken, Token } from '@/utils/storage'
 import { defineStore } from 'pinia'
 import pinia from '@/stores/index'
 
@@ -114,13 +114,19 @@ const GetUserInfo = async () => {
   store.default_auth_factor = default_auth_factor
 }
 
+const ResetToken = async () => {
+  removeToken(Token.access)
+  store.token = ''
+  store.roles = []
+}
+
 /**
  * Define a store instance for the app users.
  */
 
 const useUserStore = defineStore('user', {
   state: () => state,
-  actions: { Login, GetUserInfo },
+  actions: { Login, GetUserInfo, ResetToken },
 })
 
 /**
