@@ -72,6 +72,7 @@ const resolveRouteIcon = (route: RouteRecordRaw): string => {
 <template>
   <q-list>
     <q-toolbar class="bg-primary text-white shadow-2">
+      <q-btn flat round dense icon="business" />
       <q-toolbar-title>Company Logo</q-toolbar-title>
     </q-toolbar>
 
@@ -107,7 +108,7 @@ const resolveRouteIcon = (route: RouteRecordRaw): string => {
                 <q-icon :name="resolveRouteIcon(route, index)" />
               </q-item-section>
               -->
-            <q-item-section> {{ child.name }} </q-item-section>
+            <q-item-section class='text-weight-light'> {{ child.meta.title }} </q-item-section>
           </q-item>
         </q-list>
       </q-expansion-item>

@@ -44,7 +44,7 @@ const constantRoutes: RouteRecordRaw[] = [
         component: () => import('pages/user/UserIndex.vue'),
         name: 'User Index',
         meta: {
-          title: 'User Index',
+          title: 'Show User List',
           icon: 'people',
         },
       },
@@ -53,7 +53,7 @@ const constantRoutes: RouteRecordRaw[] = [
         component: () => import('pages/user/UserCreate.vue'),
         name: 'User Create',
         meta: {
-          title: 'User Create',
+          title: 'Create New',
           icon: 'group_add',
         },
       },
@@ -61,10 +61,10 @@ const constantRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/user2',
+    path: '/role',
     component: Layout,
-    redirect: '/user/index',
-    name: 'User 2',
+    redirect: '/role/index',
+    name: 'Role',
     meta: {
       icon: 'group',
     },
@@ -72,18 +72,18 @@ const constantRoutes: RouteRecordRaw[] = [
       {
         path: 'index',
         component: () => import('pages/user/UserIndex.vue'),
-        name: 'User Index 2',
+        name: 'Role Index',
         meta: {
-          title: 'User Index 2',
+          title: 'Show Roles List',
           icon: 'people',
         },
       },
       {
         path: 'create',
         component: () => import('pages/user/UserCreate.vue'),
-        name: 'User Create 2',
+        name: 'Role Create',
         meta: {
-          title: 'User Create 2',
+          title: 'Create Role',
           icon: 'group_add',
         },
       },
