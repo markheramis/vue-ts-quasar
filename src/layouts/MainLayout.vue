@@ -1,26 +1,18 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
+      <TopHeader 
+        :drawer-is-shown='drawerIsShown'
+        @drawer-is-shown='handleDrawerIsShown'
+      />
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-      </q-list>
+    <q-drawer
+      v-model='drawerIsShown'
+      show-if-above
+      bordered
+    >
+      <left-drawer />
     </q-drawer>
 
     <q-page-container>
@@ -30,9 +22,13 @@
 </template>
 
 <script setup lang="ts">
-const leftDrawerOpen = ref(true)
+import TopHeader from './TopHeader.vue'
+import LeftDrawer from './LeftDrawer.vue'
 
-const toggleLeftDrawer = () => {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+
+const drawerIsShown = ref(false)
+
+const handleDrawerIsShown = (event: boolean) => {
+  drawerIsShown.value = event
 }
 </script>
