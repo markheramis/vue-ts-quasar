@@ -5,7 +5,7 @@ const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/login',
     component: () => import('pages/auth/login/LoginIndex.vue'),
-    name: 'Login'
+    name: 'Login',
   },
 
   {
@@ -60,7 +60,7 @@ const constantRoutes: RouteRecordRaw[] = [
     ],
   },
 
-    {
+  {
     path: '/user2',
     component: Layout,
     redirect: '/user/index',
@@ -89,7 +89,6 @@ const constantRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-
 ]
 
 export const asyncRoutes: RouteRecordRaw[] = [

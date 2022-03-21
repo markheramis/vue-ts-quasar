@@ -1,17 +1,13 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <TopHeader 
-        :drawer-is-shown='drawerIsShown'
-        @drawer-is-shown='handleDrawerIsShown'
+      <TopHeader
+        :drawer-is-shown="drawerIsShown"
+        @drawer-is-shown="handleDrawerIsShown"
       />
     </q-header>
 
-    <q-drawer
-      v-model='drawerIsShown'
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="drawerIsShown" show-if-above bordered>
       <left-drawer />
     </q-drawer>
 
@@ -24,7 +20,6 @@
 <script setup lang="ts">
 import TopHeader from './TopHeader.vue'
 import LeftDrawer from './LeftDrawer.vue'
-
 
 const drawerIsShown = ref(false)
 
