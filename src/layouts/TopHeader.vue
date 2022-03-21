@@ -14,7 +14,7 @@ const router = useRouter()
 const route = useRoute()
 const store = useUserStore()
 
-const logout = async () => {
+const logout = () => {
   store.ResetToken()
   router.push(`/login?redirect=${route.fullPath}`)
 }
@@ -36,9 +36,10 @@ const toggleDrawerShow = () => {
       flat
       dense
       round
-      icon="menu"
+      icon="menu_open"
       aria-label="Menu"
       @click="toggleDrawerShow"
+      :class="props.drawerIsShown ? '' : 'drawer-left__toggle--open'"
     />
 
     <q-toolbar-title> App </q-toolbar-title>
@@ -75,3 +76,11 @@ const toggleDrawerShow = () => {
     </q-btn>
   </q-toolbar>
 </template>
+
+<style lang='scss'>
+button.drawer-left__toggle--open {
+  span i.q-icon {
+    transform: rotate(180deg);
+  }
+}
+</style>

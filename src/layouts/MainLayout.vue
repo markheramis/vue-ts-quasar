@@ -12,7 +12,17 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view :key='key' v-slot='{ Component }'>
+        <transition
+          appear
+          name='fade-transform'
+          mode='out-in'
+        >
+          <keep-alive>
+           <component :is="Component"></component>
+          </keep-alive>
+        </transition>
+      </router-view>
     </q-page-container>
   </q-layout>
 </template>
@@ -20,8 +30,13 @@
 <script setup lang="ts">
 import TopHeader from './TopHeader.vue'
 import LeftDrawer from './LeftDrawer.vue'
+import { useRoute } from 'vue-router';
 
 const drawerIsShown = ref(false)
+
+const route = useRoute()
+
+const key = computed(() => route.path)
 
 const handleDrawerIsShown = (event: boolean) => {
   drawerIsShown.value = event

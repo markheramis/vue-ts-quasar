@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import constantRoutes from '@/router/routes'
+import usePermissionStore from '@/stores/permission';
 import { RouteRecordName, RouteRecordRaw, useRouter } from 'vue-router'
 
 /**
@@ -11,6 +11,10 @@ const router = useRouter()
  * Set variable link current route path.
  */
 const link = ref(router.currentRoute.value.path)
+
+const permissionStore = usePermissionStore()
+
+const routes = computed(() => permissionStore.routes)
 
 /**
  * Only one nested menu is expanded at a time.
@@ -76,9 +80,9 @@ const resolveRouteIcon = (route: RouteRecordRaw): string => {
       <q-toolbar-title>Company Logo</q-toolbar-title>
     </q-toolbar>
 
-    <template v-for="route in constantRoutes" :key="route">
+    <template v-for="route in routes" :key="route">
       <q-item
-        v-if="route.children && route.children.length < 2"
+        v-if="(!route.children && route.meta) || (route.children && route.children.length <= 1)"
         :to="route.path"
         :active="link === resolveFullPath(route.path)"
         @click="link = resolveFullPath(route.path)"
@@ -108,7 +112,7 @@ const resolveRouteIcon = (route: RouteRecordRaw): string => {
                 <q-icon :name="resolveRouteIcon(route, index)" />
               </q-item-section>
               -->
-            <q-item-section class='text-weight-light'> {{ child.meta.title }} </q-item-section>
+            <q-item-section class='text-weight-light'> {{ child.meta?.title }} </q-item-section>
           </q-item>
         </q-list>
       </q-expansion-item>
