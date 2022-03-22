@@ -14,7 +14,7 @@ const router = useRouter()
 const route = useRoute()
 const store = useUserStore()
 
-const logout = () => {
+const signout = () => {
   store.ResetToken()
   router.push(`/login?redirect=${route.fullPath}`)
 }
@@ -42,9 +42,9 @@ const toggleDrawerShow = () => {
       :class="props.drawerIsShown ? '' : 'drawer-left__toggle--open'"
     />
 
-    <q-toolbar-title> App </q-toolbar-title>
+    <q-toolbar-title></q-toolbar-title>
 
-    <q-btn round color="primary" icon="account_circle">
+    <q-btn round flat icon="account_circle">
       <q-menu
         transition-show="flip-right"
         transition-hide="flip-left"
@@ -65,7 +65,7 @@ const toggleDrawerShow = () => {
             </q-item-section>
           </q-item>
           <q-separator />
-          <q-item clickable @click="logout">
+          <q-item clickable @click="signout">
             <q-item-section class='text-body2 text-weight-light'>Logout</q-item-section>
             <q-item-section avatar>
               <q-icon name='logout' size='xs' />
