@@ -5,6 +5,7 @@ import useUserStore from '@/stores/user'
 import { getToken } from '@/utils/storage'
 import usePermissionStore from '@/stores/permission'
 
+
 /* Turn off loading spinner
  *
  */
@@ -113,7 +114,7 @@ export default boot(async ({ router }) => {
     // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     NProgress.done()
 
-    // set page title
+    // set page title.
     const title = 'App'
     if (to.name) document.title = `${to.name?.toString()} - ${title}`
     else document.title = title
