@@ -5,8 +5,8 @@ import {
   createWebHashHistory,
   createWebHistory,
 } from 'vue-router'
-
 import { constantRoutes } from './routes'
+
 
 /*
  * If not building with SSR mode, you can
