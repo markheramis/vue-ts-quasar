@@ -115,6 +115,11 @@ const GetUserInfo = async () => {
   store.default_auth_factor = default_auth_factor
 }
 
+/**
+ * Remove token from device storage, and clear state
+ * token and roles.
+ */
+
 const ResetToken = async () => {
   removeToken(Token.access)
   store.token = ''
