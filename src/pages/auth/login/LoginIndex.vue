@@ -1,45 +1,120 @@
 <script setup lang="ts">
 import useUserStore from '@/stores/user'
+import { getToken, Token } from '@/utils/storage';
 import { QBtn } from 'quasar'
 import { useRouter } from 'vue-router'
 
+
+/**
+ * The router and user store intances
+ */
+ 
 const router = useRouter()
 const userStore = useUserStore()
 
-const username = ref('')
-const password = ref('')
+
+/**
+ * For two-way attribute binding on
+ * form input elements.
+ */
+
+const login = ref({
+  username: '',
+  password: ''
+})
 const feedback = ref('')
-const submitBtn = ref(QBtn)
+const submitBtn = ref<QBtn | null>(null)
 const submitBtnLoading = ref(false)
 const showPwd = ref(false)
+
+
+/**
+ * Watch for the login token stored in the 
+ * app device.
+ */
+const loginToken = computed(() => getToken(Token.login) as string)
+
+
+/**
+ * Clears the form feedback paragraph. 
+ */
 
 const clearFeedback = () => {
   feedback.value = ''
 }
 
+
+/**
+ * Handle user login into the app. Determines
+ * the kind of authentication according
+ * to user's preferred method.
+ */
+
 const submit = async () => {
   submitBtnLoading.value = true
-  await userStore
-    .Login({ username: username.value, password: password.value })
-    .then((result) => {
-      if (result.status === 'error') {
-        feedback.value = result.message
-      } else if (result.status_code === 401) {
-        feedback.value = result.errors.message[0]
-      } else {
-        router.push('/')
-      }
+
+  try {
+    const { data } = await userStore
+    .Login({
+      username: login.value.username,
+      password: login.value.password
     })
-    .finally(() => (submitBtnLoading.value = false))
+
+    if (data.status_code === 401) throw Error(data.errors.message[0])
+
+    if (data.status === 'error') throw Error(data.message)
+
+    if (data.verify)
+      /**
+       * If user has enabled MFA, present the OTP form
+       * before accessing the dashboard. OTP form requires
+       * to be passed a token prop.
+       */
+      router.push({ name: 'Mfa', params: { token: data.token }})
+    else 
+      /** 
+       * else dashboard is accessible, no mfa is set
+       */
+      router.push('/')
+  } catch(error) {
+    /** 
+     * Handle err
+     */
+
+    const err = error as any
+
+    feedback.value = err.message
+  } finally {
+    /** 
+     * Enable submit after requests are handled
+     */
+    submitBtnLoading.value = false
+  }
+
 }
+
+
+/**
+ * If user login token is already set, then
+ * proceed to OTP form.
+ */
+onBeforeMount(async() => {
+  if (loginToken.value)
+    router.push({ name: 'Mfa', params: { token: loginToken.value } })
+})
 </script>
 
 <template>
-  <q-card flat bordered class="login__card q-mx-lg q-my-lg q-px-lg q-py-lg">
+  <q-card 
+    v-if='!loginToken'
+    class="login__card q-mx-lg q-my-lg q-px-lg q-py-lg"
+    flat
+    bordered
+  >
     <q-card-section class="login__section">
       <q-form class="login__form" @submit.prevent='submit'>
         <q-input
-          v-model="username"
+          v-model="login.username"
           label="Enter Username"
           lazy-rules
           @update:model-value="clearFeedback"
@@ -52,7 +127,7 @@ const submit = async () => {
         </q-input>
 
         <q-input
-          v-model="password"
+          v-model="login.password"
           :type="showPwd ? 'text' : 'password'"
           label="Enter Password"
           lazy-rules
@@ -88,8 +163,8 @@ const submit = async () => {
         color='blue-grey-7'
         class="login__actions--submit q-mx-lg q-my-md"
         :loading="submitBtnLoading"
+        :disable='submitBtnLoading'
         icon-right='arrow_right_alt'
-        @click="submit"
       />
 
     <div class='login__forgot-pass'>
@@ -99,7 +174,7 @@ const submit = async () => {
   </q-card>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/css/quasar.variables.scss';
 
 .login__card {
