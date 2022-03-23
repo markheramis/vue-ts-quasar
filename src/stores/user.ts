@@ -62,15 +62,18 @@ const Login = async (params: ParamLogin) => {
     .then((response) => {
       const token = response.data.token
 
-      // set store token
-      store.token = token
-
       // determine type of token to set
-      if (response.data.mfa_verified && response.data.authy_id) {
+      if (response.data.verify) {
+        // set token type to type `login` if user
+        // is mfa verifed
         setToken(Token.login, token)
       } else {
+        // set to type `access` otherwise
         setToken(Token.access, token)
       }
+
+      // set store token
+      store.token = token
 
       return response
     })
@@ -126,13 +129,18 @@ const ResetToken = async () => {
   store.roles = []
 }
 
+const SetToken = async (token: string) => {
+  store.token = token
+}
+
+
 /**
  * Define a store instance for the app users.
  */
 
 const useUserStore = defineStore('user', {
   state: () => state,
-  actions: { Login, GetUserInfo, ResetToken },
+  actions: { Login, GetUserInfo, ResetToken, SetToken },
 })
 
 /**
