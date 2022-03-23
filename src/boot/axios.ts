@@ -1,6 +1,6 @@
 import { boot } from 'quasar/wrappers'
 import axios, { AxiosInstance } from 'axios'
-import { getToken } from '@/utils/storage'
+import useUserStore from '@/stores/user'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -19,8 +19,9 @@ const api = axios.create({ baseURL: process.env.SERVER_BASEURL })
 // Request interceptors
 api.interceptors.request.use(
   (config) => {
+    const userStore = useUserStore()
     // Add X-Access-Token header to every request, you can add other custom headers here
-    const userToken = getToken()
+    const userToken = userStore.token
     if (userToken && config.headers)
       config.headers.Authorization = `Bearer ${userToken}`
 
@@ -35,7 +36,7 @@ api.interceptors.response.use(
 
     return Promise.reject(response)
   },
-  (error) => Promise.reject(error.response.data)
+  (error) => Promise.reject(error.response)
 )
 
 export default boot(({ app }) => {
