@@ -19,10 +19,10 @@ export enum Token {
  * auth login tokens
  */
 
-export const getToken = () => {
-  return Platform.is.desktop
-    ? Cookies.get(Token.access)
-    : LocalStorage.getItem(Token.access)
+export const getToken = (tokenType=Token.access) => {
+  return Platform.is !== undefined && Platform.is.desktop
+    ? Cookies.get(tokenType)
+    : LocalStorage.getItem(tokenType)
 }
 
 
@@ -32,7 +32,7 @@ export const getToken = () => {
  */
 
 export const setToken = (tokenType: string, value: string) => {
-  return Platform.is.desktop
+  return Platform.is !== undefined && Platform.is.desktop
     ? Cookies.set(tokenType, value)
     : LocalStorage.set(tokenType, value)
 }
