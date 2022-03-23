@@ -102,7 +102,7 @@ module.exports = configure(function (/* ctx */) {
             /* Global imports to register
              * into the app.
              */
-            imports: ['vue', 'pinia'],
+            imports: ['vue', 'vue-router', 'pinia'],
             dts: './src/auto-imports.d.ts',
           },
         ],
