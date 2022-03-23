@@ -18,7 +18,8 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/mfa',
     component: () => import('pages/auth/login/LoginOtp.vue'),
-    name: 'Mfa'
+    name: 'Mfa',
+    props: true
   },
 
   {
