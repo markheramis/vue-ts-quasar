@@ -17,3 +17,14 @@ export const getUserInfo = () =>
     url: '/auth/me',
     method: 'get',
   })
+
+type validateCodeParams = {
+  code: string
+}
+export const validateCode = (params: validateCodeParams) =>
+  request({
+    url: '/auth/mfa/verify',
+    method: 'post',
+    data: params,
+  })
+
