@@ -16,11 +16,11 @@ NProgress.configure({ showSpinner: false })
  * app users.
  */
 
-const whiteList = ['/login', 'auth-redirect']
 
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ router }) => {
+  const whiteList = ['/login', 'auth-redirect', '/mfa', '/password-reset']
 
   /**
    * Callback function to pass on beforeGuard hook.
