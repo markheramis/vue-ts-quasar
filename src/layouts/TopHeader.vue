@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
+// import { removeToken } from '@/utils/storage';
 import useUserStore from '../stores/user'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   drawerIsShown: {
@@ -10,13 +11,13 @@ const props = defineProps({
 })
 const emit = defineEmits(['drawerIsShown'])
 
-const router = useRouter()
-const route = useRoute()
 const store = useUserStore()
+const router = useRouter()
 
-const signout = () => {
+const signout = async () => {
   store.ResetToken()
-  router.push(`/login?redirect=${route.fullPath}`)
+
+  router.push('/login')
 }
 
 const toggleDrawerShow = () => {

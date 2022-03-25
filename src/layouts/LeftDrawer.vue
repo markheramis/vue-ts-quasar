@@ -126,6 +126,7 @@ const resolveRouteIcon = (route: RouteRecordRaw): string => {
       >
         <q-list v-for="(child, index) in route.children" :key="index">
           <q-item
+            v-if='!child.meta?.hidden'
             :to="resolveFullPath(route.path, child)"
             :active="link === resolveFullPath(route.path, child)"
             @click="link = resolveFullPath(route.path, child)"
