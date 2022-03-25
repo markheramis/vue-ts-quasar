@@ -81,6 +81,7 @@ module.exports = configure(function (/* ctx */) {
       // ]
       // extendViteConf (viteConf) {},
       extendViteConf: (config) => {
+        config.build.target = 'esnext'
         config.resolve.alias = {
           '@': path.join(__dirname, 'src'),
           app: path.join(__dirname, '.'),
@@ -107,6 +108,17 @@ module.exports = configure(function (/* ctx */) {
             dts: './src/auto-imports.d.ts',
           },
         ],
+        /*
+        [
+          'vite-plugin-top-level-await',
+          {
+            // The export name of top-level await promise for each chunk module
+            promiseExportName: "__tla",
+            // The function to generate import names of top-level await promise in each chunk module
+            promiseImportName: i => `__tla_${i}`
+          }
+        ],
+        */
       ],
     },
 
