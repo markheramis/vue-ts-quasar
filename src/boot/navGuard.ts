@@ -12,25 +12,31 @@ import usePermissionStore from '@/stores/permission'
 
 NProgress.configure({ showSpinner: false })
 
+
 /* Define routes accessible by unauthenticated
  * app users.
  */
 
+const whiteList = ['/login', 'auth-redirect', '/mfa', '/password-reset']
 
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ router }) => {
-  const whiteList = ['/login', 'auth-redirect', '/mfa', '/password-reset']
-
+  
   /**
    * Callback function to pass on beforeGuard hook.
    */
 
-  const beforeGuard = async (
+  async function beforeGuard (
     to: RouteLocationNormalized,
     _: RouteLocationNormalized,
     next: NavigationGuardNext
-  ) => {
+  ) {
+    /**
+     * The target route in the link
+     */
+
+    const { path: targetPath } = to
 
     /**
      * Instantiate user store
@@ -48,34 +54,40 @@ export default boot(async ({ router }) => {
      * Retrieve token if present from device storage
      */
 
-    userStore.token = getToken() as string
+    const { token } = userStore
+
+    if (!token) 
+      userStore.SetToken( getToken() )
+
 
     // Start the progress bar
     NProgress.start()
 
-    if (userStore.token) {
-      if (to.path === '/login') {
+    if ( token ) {
+      if ( targetPath === '/login' ) {
         // If is logged in, redirect to the home page
         next({ path: '/' })
         NProgress.done()
       } else {
         // Check whether the user has obtained his permission roles
-        if (userStore.roles.length === 0) {
+        if ( userStore.roles.length === 0 ) {
           try {
             await userStore.GetUserInfo()
-            const roles = userStore.roles
+            const { roles } = userStore
 
-            permissionStore.GenerateRoutes(roles)
+            permissionStore.GenerateRoutes( roles )
 
             permissionStore.dynamicRoutes.forEach(route => {
-              router.addRoute(route)
+              router.addRoute( route )
             })
 
             // Hack: ensure addRoutes is complete
             // Set the replace: true, so the navigation will not leave a history record
-            next({ ...to, replace: true })
+            // next({ ...to, replace: true })
+            next(`${to.redirectedFrom?.fullPath}`)
           } catch (err) {
-            next(`/login?redirect=${to.path}`)
+            userStore.ResetToken()
+            next(`/login?redirect=${ targetPath }`)
             NProgress.done()
           }
         } else {
@@ -84,12 +96,12 @@ export default boot(async ({ router }) => {
       }
     } else {
       // Has no token
-      if (whiteList.indexOf(to.path) !== -1) {
+      if (whiteList.indexOf( targetPath ) !== -1) {
         // In the free login whitelist, go directly
         next()
       } else {
         // Other pages that do not have permission to access are redirected to the login page.
-        next(`/login?redirect=${to.path}`)
+        next(`/login?redirect=${ targetPath }`)
         NProgress.done()
       }
     }
@@ -101,7 +113,7 @@ export default boot(async ({ router }) => {
    * Trigger global hook before the actual navigation
    */
 
-  router.beforeEach(beforeGuard)
+  router.beforeEach( beforeGuard )
  
 
   /**
@@ -109,14 +121,17 @@ export default boot(async ({ router }) => {
    * set the app title.
    */
 
-  router.afterEach((to: RouteLocationNormalized) => {
+  router.afterEach(async(to: RouteLocationNormalized) => {
+    const { name } = to
+
     // Finish progress bar
     // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     NProgress.done()
 
+
     // set page title.
     const title = 'App'
-    if (to.name) document.title = `${to.name?.toString()} - ${title}`
+    if ( name ) document.title = `${ name?.toString() } - ${ title }`
     else document.title = title
   })
 })
