@@ -13,16 +13,18 @@ import usePermissionStore from '@/stores/permission'
 NProgress.configure({ showSpinner: false })
 
 
-/* Define routes accessible by unauthenticated
- * app users.
- */
 
-const whiteList = ['/login', 'auth-redirect', '/mfa', '/password-reset']
 
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ router }) => {
+/* Define routes accessible by unauthenticated
+ * app users.
+ */
+
+  const whiteList = ['/login', 'auth-redirect', '/mfa', '/password-reset']
   
+
   /**
    * Callback function to pass on beforeGuard hook.
    */
