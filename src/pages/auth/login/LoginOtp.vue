@@ -4,10 +4,12 @@ import useUserStore from '@/stores/user';
 import { removeToken, setToken, Token } from '@/utils/storage';
 import { useRouter } from 'vue-router';
 
+
 /**
  * OTP form stricly requires the token
  * to be passed via the vue router.
  */
+ 
 const props = defineProps({
   token: {
     type: String,
@@ -15,30 +17,60 @@ const props = defineProps({
   }
 })
 
+
+/**
+ * The router and user store intances
+ */
+
 const router = useRouter()
 const userStore = useUserStore()
+
+
+/**
+ * For two-way attribute binding on
+ * form input elements.
+ */
 
 const submitBtnLoading = ref(false)
 const otp = ref('')
 const feedback = ref('')
 
-const submitOtp = async() => {
+
+/**
+ * Validate the otp form. `login` token is
+ * then replaced with the actual `access` 
+ * token on success.
+ */
+
+const submit = async() => {
   submitBtnLoading.value = true
 
   try {
     const { data } = await validateCode({ code: otp.value })
+
     removeToken(Token.login)
     setToken(Token.access, data.token)
     userStore.SetToken(data.token)
+    
     router.push('/')
   } catch (error) {
-    console.log(error)
+    if (error instanceof Error)
+      feedback.value = error.message
+
     feedback.value = 'Could not validate otp.'
   } finally {
+    /** 
+     * Enable submit after requests are handled
+     */
+
     submitBtnLoading.value = false
   }
 }
 
+
+/**
+ * Back to login page. Removes login token.
+ */
 
 const backToLogin = () => {
   removeToken(Token.login)
@@ -52,6 +84,12 @@ const backToLogin = () => {
 const clearFeedback = () => {
   feedback.value = ''
 }
+
+
+/**
+ * Lifecycle Hooks: 
+ * https://vuejs.org/guide/essentials/lifecycle.html
+ */
 
 onBeforeMount(() => {
   userStore.SetToken(props.token)
@@ -73,7 +111,7 @@ onBeforeMount(() => {
     bordered
   >
     <q-card-section>
-      <q-form class="otp__form" @submit.prevent='submitOtp'>
+      <q-form class="otp__form" @submit.prevent='submit'>
         <q-input
           v-model='otp'
           label="Enter OTP Code"
@@ -103,6 +141,7 @@ onBeforeMount(() => {
         :loading="submitBtnLoading"
         :disable='submitBtnLoading'
         icon-right='arrow_right_alt'
+        @click='submit'
       />
 
       <div class='otp__change-user'>

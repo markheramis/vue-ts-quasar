@@ -1,5 +1,9 @@
 <template>
-  <div>
-     Role Create
-  </div>
+  <q-card>
+    <q-card-section>
+      <q-form>
+
+      </q-form>
+    </q-card-section>
+  </q-card>
 </template>

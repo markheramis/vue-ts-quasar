@@ -32,6 +32,7 @@ const showPwd = ref(false)
  * Watch for the login token stored in the 
  * app device.
  */
+
 const loginToken = computed(() => getToken(Token.login) as string)
 
 
@@ -70,24 +71,27 @@ const submit = async () => {
        * before accessing the dashboard. OTP form requires
        * to be passed a token prop.
        */
+
       router.push({ name: 'Mfa', params: { token: data.token }})
     else 
       /** 
        * else dashboard is accessible, no mfa is set
        */
+       
       router.push('/')
   } catch(error) {
     /** 
-     * Handle err
+     * Handle err. Need to type check
+     * as error is of type unknown in TS.
      */
 
-    const err = error as any
-
-    feedback.value = err.message
+    if (error instanceof Error)
+      feedback.value = error.message
   } finally {
     /** 
      * Enable submit after requests are handled
      */
+
     submitBtnLoading.value = false
   }
 
@@ -95,10 +99,16 @@ const submit = async () => {
 
 
 /**
- * If user login token is already set, then
- * proceed to OTP form.
+ * Lifecycle Hooks: 
+ * https://vuejs.org/guide/essentials/lifecycle.html
  */
+
 onBeforeMount(async() => {
+  /**
+   * If user login token is already set, then
+   * proceed to OTP form.
+   */
+
   if (loginToken.value)
     router.push({ name: 'Mfa', params: { token: loginToken.value } })
 })
@@ -165,6 +175,7 @@ onBeforeMount(async() => {
         :loading="submitBtnLoading"
         :disable='submitBtnLoading'
         icon-right='arrow_right_alt'
+        @click='submit'
       />
 
     <div class='login__forgot-pass'>
