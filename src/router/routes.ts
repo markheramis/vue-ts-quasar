@@ -74,6 +74,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
           icon: 'user',
         },
       },
+
       {
         path: 'create',
         component: () => import('pages/user/UserCreate.vue'),
@@ -84,6 +85,17 @@ export const asyncRoutes: RouteRecordRaw[] = [
         },
       },
 
+      {
+        path: ':userId',
+        component: () => import('pages/user/UserCreate.vue'),
+        props: true,
+        name: 'User Edit',
+        meta: {
+          title: 'Edit User',
+          icon: 'group_add',
+          hidden: true,
+        },
+      },
     ],
   },
 
