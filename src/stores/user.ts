@@ -124,9 +124,9 @@ const GetUserInfo = async () => {
  */
 
 const ResetToken = async () => {
-  removeToken(Token.access)
   store.token = ''
   store.roles = []
+  removeToken(Token.access)
 }
 
 const SetToken = async (token: string) => {

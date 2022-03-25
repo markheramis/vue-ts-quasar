@@ -19,10 +19,12 @@ export enum Token {
  * auth login tokens
  */
 
-export const getToken = (tokenType=Token.access) => {
-  return Platform.is !== undefined && Platform.is.desktop
-    ? Cookies.get(tokenType)
-    : LocalStorage.getItem(tokenType)
+export const getToken = (tokenType=Token.access): string => {
+  if (Platform.is !== undefined && Platform.is.desktop) {
+    return Cookies.get(tokenType)
+  } else {
+    return LocalStorage.getItem(tokenType) || ''
+  }
 }
 
 
@@ -33,7 +35,7 @@ export const getToken = (tokenType=Token.access) => {
 
 export const setToken = (tokenType: string, value: string) => {
   return Platform.is !== undefined && Platform.is.desktop
-    ? Cookies.set(tokenType, value)
+    ? Cookies.set(tokenType, value, { secure: true })
     : LocalStorage.set(tokenType, value)
 }
 
@@ -42,7 +44,7 @@ export const setToken = (tokenType: string, value: string) => {
  *  the device type.
  */
 
-export const removeToken = (tokenType: string) => {
+export const removeToken = (tokenType=Token.access) => {
   Cookies.remove(tokenType)
   LocalStorage.remove(tokenType)
 }
