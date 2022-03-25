@@ -66,6 +66,7 @@ module.exports = configure(function (/* ctx */) {
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // publicPath: '/',
+      publicPath: '/vue-ts-quasar',
       // analyze: true,
       // env: {},
       // rawDefine: {}
