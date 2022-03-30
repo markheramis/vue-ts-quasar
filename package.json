@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "dev": "quasar dev",
+    "dev:electron": "quasar dev -m electron -- --no-sandbox --disable-setuid-sandbox",
     "build": "quasar clean && quasar build",
     "deploy": "push-dir --dir=dist/spa --remote=origin --branch=deploy",
     "lint": "eslint --ext .js,.ts,.vue ./",
@@ -41,7 +42,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "electron": "^17.2.0",
-    "eslint": "^8.10.0",
+    "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^8.5.0",
     "jsdom": "^19.0.0",
@@ -51,7 +52,7 @@
     "unplugin-auto-import": "^0.6.6",
     "unplugin-vue-components": "^0.18.4",
     "vite-plugin-inspect": "^0.4.3",
-    "vitest": "^0.7.8"
+    "vitest": "^0.7.11"
   },
   "engines": {
     "node": "^18 || ^16 || ^14.19",
