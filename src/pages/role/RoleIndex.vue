@@ -1,5 +1,3 @@
 <template>
-  <div>
-    Role Index 
-  </div>
+  <div>ROLE INDEX</div>
 </template>

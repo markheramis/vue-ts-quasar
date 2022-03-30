@@ -5,7 +5,6 @@ import { Cookies, LocalStorage, Platform } from 'quasar'
  * desktop, LocalStorage otherwise.
  */
 
-
 /* Define set of tokens
  *
  */
@@ -14,12 +13,11 @@ export enum Token {
   login = 'login_token',
 }
 
-
 /* Actions for setting/getting user
  * auth login tokens
  */
 
-export const getToken = (tokenType=Token.access): string => {
+export const getToken = (tokenType = Token.access): string => {
   if (Platform.is !== undefined && Platform.is.desktop) {
     return Cookies.get(tokenType)
   } else {
@@ -27,9 +25,8 @@ export const getToken = (tokenType=Token.access): string => {
   }
 }
 
-
 /** Set token to device storage for auth use.
- *  Falls back to localstorage if cookies not 
+ *  Falls back to localstorage if cookies not
  *  supported.
  */
 
@@ -39,12 +36,11 @@ export const setToken = (tokenType: string, value: string) => {
     : LocalStorage.set(tokenType, value)
 }
 
-
 /** Remove access/login token regardless of
  *  the device type.
  */
 
-export const removeToken = (tokenType=Token.access) => {
+export const removeToken = (tokenType = Token.access) => {
   Cookies.remove(tokenType)
   LocalStorage.remove(tokenType)
 }
