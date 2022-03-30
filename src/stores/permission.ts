@@ -2,7 +2,6 @@ import { asyncRoutes, constantRoutes } from '@/router/routes'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 import pinia from '@/stores/index'
 
-
 /**
  * TYPES
  */
@@ -48,7 +47,6 @@ export const filterAsyncRoutes = (
   return res
 }
 
-
 /**
  * STATE
  */
@@ -58,8 +56,7 @@ const state: IPermissionState = {
   dynamicRoutes: [],
 }
 
-
-const GenerateRoutes = async(roles: string[]) => {
+const GenerateRoutes = async (roles: string[]) => {
   /* eslint-disable-next-line */
   let accessedRoutes: any
 
@@ -73,7 +70,6 @@ const GenerateRoutes = async(roles: string[]) => {
   store.dynamicRoutes = accessedRoutes
 }
 
-
 /**
  * Define a store instance for the app permissions.
  */
@@ -83,13 +79,11 @@ const usePermissionStore = defineStore('permission', {
   actions: { GenerateRoutes },
 })
 
-
 /**
  * Hoist this variable for local use.
  */
 
 const store = usePermissionStore(await pinia({}))
-
 
 /**
  * Export for global use

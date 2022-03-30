@@ -2,33 +2,30 @@ import { getUserInfo, login } from '@/api/users'
 import { removeToken, setToken, Token } from '@/utils/storage'
 import { defineStore } from 'pinia'
 import pinia from '@/stores/index'
+import User from '@/types/user'
 
-/**
- * The user store state types
- *
- */
-
-export type UserStoreState = {
-  token: string
-  id: number
-  username: string
-  first_name: string
-  last_name: string
-  email: string
-  authy_verified: number
-  default_auth_factor: string
-  roles: string[]
-}
 
 /**
  * Parameter types for user login
  *
  */
 
-type ParamLogin = {
-  username: string
-  password: string
+type ParamLogin = Pick<User.Account, 'username' | 'password'>
+
+type UserToken = {
+  token: string
 }
+
+/**
+ * The user store state types
+ *
+ */
+type UserStoreState = 
+  UserToken &
+  Pick<User.Bio, 'id' | 'first_name' | 'last_name' | 'email'> &
+  Pick<User.Account, 'username' | 'authy_verified' | 'default_auth_factor'> &
+  User.Permission
+
 
 /**
  * The user store state properties
@@ -47,6 +44,7 @@ const state: UserStoreState = {
   roles: [],
 }
 
+
 /**
  * Performs login POST request to the server. If user is
  * authenticated and has MFA enabled, sets token type to
@@ -60,10 +58,10 @@ const Login = async (params: ParamLogin) => {
   const { username, password } = params
   const result = await login({ username, password })
     .then((response) => {
-      const token = response.data.token
+      const token = response.data.data.token
 
       // determine type of token to set
-      if (response.data.verify) {
+      if (response.data.data.verify) {
         // set token type to type `login` if user
         // is mfa verifed
         setToken(Token.login, token)
@@ -100,9 +98,9 @@ const GetUserInfo = async () => {
     email,
     authy_verified,
     default_auth_factor,
-  } = data
+  } = data.data
   /* eslint-disable-next-line */
-  const roles = data.roles as any[]
+  const roles = data.data.roles as any[]
 
   if (!roles) throw Error('GetUserInfo: roles must be a non-null array!')
   roles.forEach((role) => {
@@ -132,7 +130,6 @@ const ResetToken = async () => {
 const SetToken = async (token: string) => {
   store.token = token
 }
-
 
 /**
  * Define a store instance for the app users.
