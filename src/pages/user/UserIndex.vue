@@ -1,40 +1,22 @@
-<script setup lang='ts'>
-import { deleteUser, getUsers } from '@/api/users';
-import { useQuasar } from 'quasar';
+<script setup lang="ts">
+import { deleteUser, getUsers } from '@/api/users'
+import User from '@/types/user';
+import { useQuasar } from 'quasar'
+import { columns } from './UserIndex'
 
+
+type User = 
+  Pick<User.Bio, 'id' | 'first_name' | 'last_name' | 'email'> &
+  Pick<User.Account, 'username'> &
+  User.Permission
 
 const q = useQuasar()
 const router = useRouter()
 
-type UserRow = {
-  id: number
-  email: string
-  role: string[]
-  username: string
-  first_name: string
-  last_name: string
-}
-
-const columns = [
-  { name: 'id', label: '#', align: 'left', sortable: true, field: 'id' },
-  { name: 'email', align: 'left', label: 'Email', field: 'email' },
-  { name: 'role', label: 'Role', align: 'left', field: 'role' },
-  { name: 'username', label: 'Username', align: 'left', field: 'username' },
-  { name: 'first_name', label: 'First Name', align: 'left', field: 'first_name' },
-  { name: 'last_name', label: 'Last Name', align: 'left', field: 'last_name' },
-  { name: 'actions', label: 'Actions', align: 'left', style: 'width: 100px' }
-] as any
-
-const rows = ref<UserRow[]>([])
+const rows = ref<User[]>([])
 const loading = ref(true)
-const pagination = ref({
-  sortBy: 'desc',
-  descending: false,
-  page: 2,
-  rowsPerPage: 5,
-})
 
-const userEdit = (user: UserRow) => {
+const userEdit = (user: User) => {
   router.push({ name: 'User Edit', params: { userId: `${user.id}` } })
 }
 
@@ -42,30 +24,30 @@ const fetchTable = async () => {
   rows.value = []
   loading.value = true
   try {
-    const { data, meta } = await getUsers({ })
-    if (data && data instanceof Array) {
-      data.forEach(d => {
+    const { data } = await getUsers({})
+    if (data && data.data instanceof Array) {
+      /* eslint-disable-next-line */
+      data.data.forEach((d: any) => {
+        const { email, role, username, first_name, last_name } = d.attributes
+
         rows.value.push({
           id: parseInt(d.id),
-          email: d.attributes.email,
-          role: d.attributes.role,
-          username: d.attributes.username,
-          first_name: d.attributes.first_name,
-          last_name: d.attributes.last_name
+          email: email,
+          roles: role[0],
+          username: username,
+          first_name: first_name,
+          last_name: last_name,
         })
       })
     }
-
-    pagination.value.rowsPerPage = meta.pagination.per_page
-    toRaw(rows)
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   } finally {
     loading.value = false
   }
 }
 
-const userDelete = async (user: UserRow) => {
+const userDelete = async (user: User) => {
   await deleteUser(user.id)
   fetchTable()
 }
@@ -76,27 +58,73 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div class='q-ma-md'>
-    <q-table 
-      class='user-table'
-      title='Users'
+  <div class="q-ma-md">
+    <q-table
+      class="user-table user-table__sticky-column"
+      title="Users"
       flat
       bordered
-      :loading='loading'
-      :grid='q.screen.xs'
-      :columns='columns'
-      :rows='rows'
-      row-key='id'
-      :pagination='pagination'
+      :loading="loading"
+      :grid="q.screen.xs"
+      :columns="columns"
+      :rows="rows"
+      row-key="id"
     >
-      <template v-slot:body-cell-actions='{ row }'>
+      <template v-slot:body-cell-actions="{ row }">
         <q-td>
           <q-btn-group flat>
-            <q-btn label='Edit' icon='edit' size='sm' @click='userEdit(row)'></q-btn>
-            <q-btn label='Delete' icon='delete' size='sm' @click='userDelete(row)'></q-btn>
+            <q-btn
+              label="Edit"
+              icon="edit"
+              size="sm"
+              @click="userEdit(row)"
+            ></q-btn>
+            <q-btn
+              label="Delete"
+              icon="delete"
+              size="sm"
+              @click="userDelete(row)"
+            ></q-btn>
           </q-btn-group>
         </q-td>
-      </template>     
+      </template>
     </q-table>
   </div>
 </template>
+
+<style lang="scss">
+.user-table__sticky-column {
+  /* set sticky column to the 7th child, which is the `Actions` column */
+
+  th:nth-child(7),
+  td:nth-child(7) {
+    position: sticky;
+    right: 0;
+    background-color: #fff;
+  }
+}
+
+.user-table__header-id {
+  width: 100px;
+}
+
+.user-table__header-email {
+  width: 280px;
+}
+
+.user-table__header-role {
+  width: 150px;
+}
+
+.user-table__header-username {
+  width: 200px;
+}
+
+.user-table__header-firstname {
+  width: 200px;
+}
+
+.user-table__header-lastname {
+  width: 200px;
+}
+</style>

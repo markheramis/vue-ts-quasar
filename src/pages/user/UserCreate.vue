@@ -1,94 +1,174 @@
-<script setup lang='ts'>
-import { createUser, getUserById, updateUser } from '@/api/users';
+<script setup lang="ts">
+import { createUser, getUserById, updateUser } from '@/api/users'
+import { QForm, useQuasar } from 'quasar'
+import {
+  firstNameRules,
+  lastNameRules,
+  emailRules,
+  usernameRules,
+  passwordRules,
+  userDefault,
+} from './UserCreate'
 
+
+/**
+ * The user id passed as component props
+ */
 
 const props = defineProps({
   userId: {
     type: String,
-    default: ''
-  } 
+    default: '',
+  },
 })
 
-const user = ref({
-  first_name: '',
-  last_name: '',
-  email: '',
-  username: ''
-})
+/**
+ * Define router and quasar instances
+ */
 
+const router = useRouter()
+const q = useQuasar()
+
+/**
+ * Component variables for v-bind directive
+ */
+
+const user = ref<
+  Omit<typeof userDefault, 'password'> &
+  Partial<Pick<typeof userDefault, 'password'>>
+>(userDefault)
+const userForm = ref<QForm | null>(null)
 const feedback = ref('')
+const isEdit = ref(false)
+const showPwd = ref(false)
+
+/**
+ * Local methods
+ */
 
 const submit = async () => {
-  if (!props.userId) {
-    await createUser({ ...user.value }) 
+  const validate = await userForm.value?.validate()
+
+  if (!validate) return
+
+  let message = ''
+  if (!props.userId || !isEdit.value) {
+    await createUser({ ...user.value })
+    message = 'User Created'
   } else {
     await updateUser(parseInt(props.userId), { ...user.value })
-
-    feedback.value = 'User updated...'
+    message = 'User Updated'
   }
+
+  q.notify({
+    color: 'secondary',
+    textColor: 'white',
+    message: message,
+    icon: 'check',
+    position: 'top',
+    timeout: 2500,
+  })
 }
 
-onBeforeMount(async() => {
-  if (props.userId) {
-    const { data } = await getUserById(props.userId)
+const reset = () => {
+  user.value = { ...userDefault }
+  userForm.value?.reset()
+}
 
-    const { first_name, last_name, email, username } = data.data
+/**
+ * Watch userId prop changes and act accordingly, as this
+ * component is used on both edit and create.
+ */
 
-    user.value = { first_name, last_name, email, username }
+watchEffect(async () => {
+  if (!props.userId) {
+    isEdit.value = false
+
+    reset()
+  } else {
+    isEdit.value = true
+    try {
+      const { data } = await getUserById(props.userId)
+
+      const { first_name, last_name, email, username } = data.data.data
+
+      user.value = { first_name, last_name, email, username }
+    } catch (err) {
+      isEdit.value = false
+      router.push('/user/create')
+    }
   }
-})
-
-onBeforeUpdate(() => {
-  console.log(props.userId)
 })
 </script>
 <template>
-  <q-card class='q-ma-md user-create__card'>
+  <q-card class="q-ma-md user-create__card">
     <q-card-section>
-      <q-form class="user-create__form" @submit.prevent='submit'>
+      <q-form
+        ref="userForm"
+        class="user-create__form"
+        @submit.prevent="submit"
+        @keyup.enter="submit"
+      >
         <q-input
-          v-model='user.first_name'
-          placeholder='First Name'
+          v-model="user.first_name"
+          label="First Name"
+          :rules="firstNameRules"
           autofocus
         />
 
         <q-input
-          v-model='user.last_name'
-          placeholder='Last Name'
+          v-model="user.last_name"
+          label="Last Name"
+          :rules="lastNameRules"
         />
 
         <q-input
-          v-model='user.email'
-          placeholder='Email'
+          v-model="user.email"
+          label="Email"
+          type="email"
+          :rules="emailRules"
         />
 
         <q-input
-          v-model='user.username'
-          placeholder='Username'
+          v-model="user.username"
+          label="Username"
+          :rules="usernameRules"
         />
+
+        <q-input
+          v-if="!isEdit"
+          v-model="user.password"
+          label="Password"
+          :type="showPwd ? 'text' : 'password'"
+          :rules="passwordRules"
+        >
+          <template #append>
+            <q-icon
+              :name="showPwd ? 'visibility_off' : 'visibility'"
+              class="user-create__show-pwd"
+              @click="showPwd = !showPwd"
+            />
+          </template>
+        </q-input>
       </q-form>
     </q-card-section>
 
     <q-card-actions>
-      <div 
+      <div
         :visibility="feedback ? 'visible' : 'none'"
-        class='user-create__feedback text-caption text-weight-light'
+        class="user-create__feedback text-caption text-weight-light"
       >
-        <q-icon v-show='feedback' name='warning_amber' class='q-pr-md' />
+        <q-icon v-show="feedback" name="warning_amber" class="q-pr-md" />
         {{ feedback }}
       </div>
 
       <q-btn
-        :label="props.userId ? 'Update' : 'Submit'"
-        color='primary'
-        icon='save'
-        @click='submit'
+        :label="isEdit ? 'Update' : 'Submit'"
+        color="primary"
+        :icon="isEdit ? 'save_as' : 'save'"
+        @click="submit"
       ></q-btn>
-      <q-btn
-        v-if='!props.userId'
-        label='Clear'
-        icon='clear'
-      ></q-btn>
+      <q-btn v-if="!isEdit" label="Clear" icon="clear" @click="reset"></q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -96,7 +176,7 @@ onBeforeUpdate(() => {
 <style lang="scss">
 .user-create__card {
   max-width: 800px;
-  }
+}
 
 .user-create__feedback {
   height: 1rem;
@@ -105,5 +185,9 @@ onBeforeUpdate(() => {
   margin-top: 10px;
   clear: both;
   margin-bottom: 20px;
+}
+
+.user-create__show-pwd {
+  cursor: pointer;
 }
 </style>
