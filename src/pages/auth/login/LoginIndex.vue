@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import useUserStore from '@/stores/user'
-import { getToken, Token } from '@/utils/storage';
-import { QBtn } from 'quasar'
+import { getToken, Token } from '@/utils/storage'
+import { QBtn, QInput } from 'quasar'
 import { useRouter } from 'vue-router'
-
 
 /**
  * The router and user store intances
  */
- 
+
 const router = useRouter()
 const userStore = useUserStore()
-
 
 /**
  * For two-way attribute binding on
@@ -20,30 +18,28 @@ const userStore = useUserStore()
 
 const login = ref({
   username: '',
-  password: ''
+  password: '',
 })
 const feedback = ref('')
 const submitBtn = ref<QBtn | null>(null)
 const submitBtnLoading = ref(false)
 const showPwd = ref(false)
-
+const loginPassword = ref<QInput | null>(null)
 
 /**
- * Watch for the login token stored in the 
+ * Watch for the login token stored in the
  * app device.
  */
 
 const loginToken = computed(() => getToken(Token.login) as string)
 
-
 /**
- * Clears the form feedback paragraph. 
+ * Clears the form feedback paragraph.
  */
 
 const clearFeedback = () => {
   feedback.value = ''
 }
-
 
 /**
  * Handle user login into the app. Determines
@@ -55,55 +51,48 @@ const submit = async () => {
   submitBtnLoading.value = true
 
   try {
-    const { data } = await userStore
-    .Login({
+    const { data } = await userStore.Login({
       username: login.value.username,
-      password: login.value.password
+      password: login.value.password,
     })
 
     if (data.status_code === 401) throw Error(data.errors.message[0])
 
     if (data.status === 'error') throw Error(data.message)
 
-    if (data.verify)
+    if (data.data.verify)
       /**
        * If user has enabled MFA, present the OTP form
        * before accessing the dashboard. OTP form requires
        * to be passed a token prop.
        */
 
-      router.push({ name: 'Mfa', params: { token: data.token }})
-    else 
-      /** 
-       * else dashboard is accessible, no mfa is set
-       */
-       
-      router.push('/')
-  } catch(error) {
-    /** 
+      router.push({ name: 'Mfa', params: { token: data.token } })
+    /**
+     * else dashboard is accessible, no mfa is set
+     */ else router.push('/')
+  } catch (error) {
+    /**
      * Handle err. Need to type check
      * as error is of type unknown in TS.
      */
 
-    if (error instanceof Error)
-      feedback.value = error.message
+    if (error instanceof Error) feedback.value = error.message
   } finally {
-    /** 
+    /**
      * Enable submit after requests are handled
      */
 
     submitBtnLoading.value = false
   }
-
 }
 
-
 /**
- * Lifecycle Hooks: 
+ * Lifecycle Hooks:
  * https://vuejs.org/guide/essentials/lifecycle.html
  */
 
-onBeforeMount(async() => {
+onBeforeMount(async () => {
   /**
    * If user login token is already set, then
    * proceed to OTP form.
@@ -112,17 +101,27 @@ onBeforeMount(async() => {
   if (loginToken.value)
     router.push({ name: 'Mfa', params: { token: loginToken.value } })
 })
+
+watch(
+  () => showPwd.value,
+  async () => {
+    if (loginPassword.value) {
+      const input = loginPassword.value.getNativeElement() as HTMLInputElement
+      await nextTick(() => input.focus())
+    }
+  }
+)
 </script>
 
 <template>
-  <q-card 
-    v-if='!loginToken'
+  <q-card
+    v-if="!loginToken"
     class="login__card q-mx-lg q-my-lg q-px-lg q-py-lg"
     flat
     bordered
   >
     <q-card-section class="login__section">
-      <q-form class="login__form" @submit.prevent='submit'>
+      <q-form class="login__form" @submit.prevent="submit">
         <q-input
           v-model="login.username"
           label="Enter Username"
@@ -132,11 +131,12 @@ onBeforeMount(async() => {
           autofocus
         >
           <template #prepend>
-            <q-icon name='person' />
+            <q-icon name="person" />
           </template>
         </q-input>
 
         <q-input
+          ref="loginPassword"
           v-model="login.password"
           :type="showPwd ? 'text' : 'password'"
           label="Enter Password"
@@ -145,42 +145,44 @@ onBeforeMount(async() => {
           @keyup.enter="submit"
         >
           <template #prepend>
-            <q-icon name='lock' />
+            <q-icon name="lock" />
           </template>
           <template #append>
-            <q-icon 
+            <q-icon
               :name="showPwd ? 'visibility' : 'visibility_off'"
-              @click='showPwd = !showPwd'
-              style='cursor: pointer;'
+              @click="showPwd = !showPwd"
+              style="cursor: pointer"
             />
           </template>
         </q-input>
       </q-form>
-      
-      <div 
+
+      <div
         :visibility="feedback ? 'visible' : 'none'"
-        class='login__feedback text-caption text-weight-light'
+        class="login__feedback text-caption text-weight-light"
       >
-        <q-icon v-show='feedback' name='warning_amber' class='q-pr-md' />
+        <q-icon v-show="feedback" name="warning_amber" class="q-pr-md" />
         {{ feedback }}
-    </div>
+      </div>
     </q-card-section>
     <q-card-actions class="login__actions">
       <q-btn
         ref="submitBtn"
         label="Proceed"
         type="submit"
-        color='blue-grey-7'
+        color="blue-grey-7"
         class="login__actions--submit q-mx-lg q-my-md"
         :loading="submitBtnLoading"
-        :disable='submitBtnLoading'
-        icon-right='arrow_right_alt'
-        @click='submit'
+        :disable="submitBtnLoading"
+        icon-right="arrow_right_alt"
+        @click="submit"
       />
 
-    <div class='login__forgot-pass'>
-      <router-link to='/password-reset' class='text-dark'>Forgot Password?</router-link>
-    </div>
+      <div class="login__forgot-pass">
+        <router-link to="/password-reset" class="text-dark"
+          >Forgot Password?</router-link
+        >
+      </div>
     </q-card-actions>
   </q-card>
 </template>
@@ -198,7 +200,7 @@ onBeforeMount(async() => {
 }
 
 .login__section {
-  padding-bottom: 0!important;
+  padding-bottom: 0 !important;
 }
 
 .login__feedback {
@@ -215,7 +217,7 @@ onBeforeMount(async() => {
     text-decoration: none;
 
     &:hover {
-      color: $primary!important;
+      color: $primary !important;
     }
   }
 }
