@@ -11,7 +11,7 @@
 const { configure } = require('quasar/wrappers')
 const path = require('path')
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   return {
     eslint: {
       // fix: true,
@@ -66,7 +66,7 @@ module.exports = configure(function (/* ctx */) {
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // publicPath: '/',
-      publicPath: '/vue-ts-quasar',
+      // publicPath: '/vue-ts-quasar',
       // analyze: true,
       // env: {},
       // rawDefine: {}
@@ -127,7 +127,7 @@ module.exports = configure(function (/* ctx */) {
       https: true,
       open: false, // opens browser window automatically
       vueDevtools: true,
-      port: process.env.DEV_PORT,
+      port: ctx.mode.spa ? process.env.DEV_PORT : 5050,
       proxy: {
         [process.env.SERVER_BASEURL]: {
           target: `
@@ -158,7 +158,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Cookies', 'LocalStorage', 'SessionStorage'],
+      plugins: ['Cookies', 'LocalStorage', 'SessionStorage', 'Notify'],
     },
 
     // animations: 'all', // --- includes all animations
