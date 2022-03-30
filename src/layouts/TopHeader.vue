@@ -54,22 +54,28 @@ const toggleDrawerShow = () => {
       >
         <q-list style="min-width: 200px">
           <q-item clickable dense padding>
-            <q-item-section class='text-body2 text-weight-light'>Account Settings</q-item-section>
+            <q-item-section class="text-body2 text-weight-light"
+              >Account Settings</q-item-section
+            >
             <q-item-section avatar>
-              <q-icon name='settings' size='xs' />
+              <q-icon name="settings" size="xs" />
             </q-item-section>
           </q-item>
           <q-item clickable>
-            <q-item-section class='text-body2 text-weight-light'>Support</q-item-section>
+            <q-item-section class="text-body2 text-weight-light"
+              >Support</q-item-section
+            >
             <q-item-section avatar>
-              <q-icon name='support' size='xs' />
+              <q-icon name="support" size="xs" />
             </q-item-section>
           </q-item>
           <q-separator />
           <q-item clickable @click="signout">
-            <q-item-section class='text-body2 text-weight-light'>Logout</q-item-section>
+            <q-item-section class="text-body2 text-weight-light"
+              >Logout</q-item-section
+            >
             <q-item-section avatar>
-              <q-icon name='logout' size='xs' />
+              <q-icon name="logout" size="xs" />
             </q-item-section>
           </q-item>
         </q-list>
@@ -78,7 +84,7 @@ const toggleDrawerShow = () => {
   </q-toolbar>
 </template>
 
-<style lang='scss'>
+<style lang="scss">
 button.drawer-left__toggle--open {
   span i.q-icon {
     transform: rotate(180deg);

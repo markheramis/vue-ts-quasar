@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import usePermissionStore from '@/stores/permission';
+import usePermissionStore from '@/stores/permission'
 import { RouteRecordName, RouteRecordRaw, useRouter } from 'vue-router'
-
 
 /**
  * The router instance
@@ -9,13 +8,11 @@ import { RouteRecordName, RouteRecordRaw, useRouter } from 'vue-router'
 
 const router = useRouter()
 
-
 /**
  * Set variable link current route path.
  */
 
 const link = ref(router.currentRoute.value.path)
-
 
 /**
  * Get app permisson state
@@ -23,13 +20,11 @@ const link = ref(router.currentRoute.value.path)
 
 const permissionStore = usePermissionStore()
 
-
 /**
  * The permission state set of routes
  */
 
 const routes = computed(() => permissionStore.routes)
-
 
 /**
  * Only one nested menu is expanded at a time.
@@ -51,7 +46,6 @@ const handleExpand = (
   return temp
 }
 
-
 /**
  * Resolve route name by asserting it as string.
  *
@@ -64,7 +58,6 @@ const resolveRouteName = (name: RouteRecordName | undefined) => {
 
   return ''
 }
-
 
 /**
  * Resolve full path of either the parent or child route.
@@ -79,7 +72,6 @@ const resolveFullPath = (parentPath: string, childRoute?: RouteRecordRaw) => {
 
   return parentPath
 }
-
 
 /**
  * Resolve name of the route icon. Assert it as string. Returns empty by default.
@@ -104,11 +96,14 @@ const resolveRouteIcon = (route: RouteRecordRaw): string => {
 
     <template v-for="route in routes" :key="route">
       <q-item
-        v-if="(!route.children && route.meta) || (route.children && route.children.length <= 1)"
+        v-if="
+          (!route.children && route.meta) ||
+          (route.children && route.children.length <= 1)
+        "
         :to="route.path"
         :active="link === resolveFullPath(route.path)"
         @click="link = resolveFullPath(route.path)"
-        active-class='router-active-link__custom--parent'
+        active-class="router-active-link__custom--parent"
       >
         <q-item-section avatar>
           <q-icon :name="resolveRouteIcon(route)" />
@@ -126,18 +121,20 @@ const resolveRouteIcon = (route: RouteRecordRaw): string => {
       >
         <q-list v-for="(child, index) in route.children" :key="index">
           <q-item
-            v-if='!child.meta?.hidden'
+            v-if="!child.meta?.hidden"
             :to="resolveFullPath(route.path, child)"
             :active="link === resolveFullPath(route.path, child)"
             @click="link = resolveFullPath(route.path, child)"
-            active-class='router-active-link__custom--child'
+            active-class="router-active-link__custom--child"
           >
             <!--
               <q-item-section avatar>
                 <q-icon :name="resolveRouteIcon(route, index)" />
               </q-item-section>
               -->
-            <q-item-section class='text-weight-light'> {{ child.meta?.title }} </q-item-section>
+            <q-item-section class="text-weight-light">
+              {{ child.meta?.title }}
+            </q-item-section>
           </q-item>
         </q-list>
       </q-expansion-item>
