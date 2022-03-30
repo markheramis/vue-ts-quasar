@@ -1,25 +1,23 @@
 import { RouteRecordRaw } from 'vue-router'
 import Layout from 'layouts/MainLayout.vue'
 
-
-/** 
+/**
  * Routes accessible for users with no special
  * permissions use-cases.
  */
 
 export const constantRoutes: RouteRecordRaw[] = [
-
   {
     path: '/login',
     component: () => import('pages/auth/login/LoginIndex.vue'),
     name: 'Login',
   },
-  
+
   {
     path: '/mfa',
     component: () => import('pages/auth/login/LoginOtp.vue'),
     name: 'Mfa',
-    props: true
+    props: true,
   },
 
   {
@@ -42,18 +40,15 @@ export const constantRoutes: RouteRecordRaw[] = [
         },
       },
     ],
-  }
-
+  },
 ]
 
-
-/** 
+/**
  * Will be loaded to users with elevated rights
  * e.g. admin, moderator, staff etc.
  */
 
 export const asyncRoutes: RouteRecordRaw[] = [
-
   {
     path: '/user',
     component: markRaw(Layout),
@@ -112,6 +107,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: 'index',
+        // component: () => import('pages/role/RoleIndex.vue'),
         component: () => import('pages/role/RoleIndex.vue'),
         name: 'Role Index',
         meta: {
@@ -138,5 +134,4 @@ export const asyncRoutes: RouteRecordRaw[] = [
     name: 'NotFound',
     component: () => import('pages/ErrorNotFound.vue'),
   },
-
 ]
