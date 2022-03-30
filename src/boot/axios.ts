@@ -32,7 +32,7 @@ api.interceptors.request.use(
 // Response Interceptors
 api.interceptors.response.use(
   (response) => {
-    if (response.data) return response.data
+    if (response.data) return response
 
     return Promise.reject(response)
   },
