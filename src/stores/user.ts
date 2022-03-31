@@ -22,7 +22,7 @@ type UserToken = {
  */
 type UserStoreState = 
   UserToken &
-  Pick<User.Bio, 'id' | 'first_name' | 'last_name' | 'email'> &
+  Pick<User.Bio, 'id' | 'first_name' | 'last_name' | 'email' | 'phone_number'> &
   Pick<User.Account, 'username' | 'authy_verified' | 'default_auth_factor'> &
   User.Permission
 
@@ -39,8 +39,9 @@ const state: UserStoreState = {
   first_name: '',
   last_name: '',
   email: '',
+  phone_number: '',
   authy_verified: 0,
-  default_auth_factor: '',
+  default_auth_factor: 'sms',
   roles: [],
 }
 
@@ -96,6 +97,7 @@ const GetUserInfo = async () => {
     first_name,
     last_name,
     email,
+    phone_number,
     authy_verified,
     default_auth_factor,
   } = data.data
@@ -112,6 +114,7 @@ const GetUserInfo = async () => {
   store.first_name = first_name
   store.last_name = last_name
   store.email = email
+  store.phone_number = phone_number
   store.authy_verified = authy_verified
   store.default_auth_factor = default_auth_factor
 }
