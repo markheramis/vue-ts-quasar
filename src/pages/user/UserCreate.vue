@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createUser, getUserById, updateUser } from '@/api/users'
+import { getUserById } from '@/api/users'
 import { QForm, useQuasar } from 'quasar'
 import {
   firstNameRules,
@@ -8,6 +8,7 @@ import {
   usernameRules,
   passwordRules,
   userDefault,
+handleSubmit,
 } from './UserCreate'
 
 
@@ -33,38 +34,36 @@ const q = useQuasar()
  * Component variables for v-bind directive
  */
 
-const user = ref<
-  Omit<typeof userDefault, 'password'> &
-  Partial<Pick<typeof userDefault, 'password'>>
->(userDefault)
+const user = ref(userDefault)
 const userForm = ref<QForm | null>(null)
-const feedback = ref('')
+const feedbacks = ref<string[]>([])
 const isEdit = ref(false)
 const showPwd = ref(false)
+
 
 /**
  * Local methods
  */
 
 const submit = async () => {
+  feedbacks.value = []
   const validate = await userForm.value?.validate()
 
   if (!validate) return
 
-  let message = ''
-  if (!props.userId || !isEdit.value) {
-    await createUser({ ...user.value })
-    message = 'User Created'
-  } else {
-    await updateUser(parseInt(props.userId), { ...user.value })
-    message = 'User Updated'
+  const result = await handleSubmit(user.value, props.userId)
+
+  if (result.state === 'error') {
+    Object.keys(result.data).forEach(key => {
+      feedbacks.value.push(result.data[key][0])
+    })
   }
 
   q.notify({
-    color: 'secondary',
+    color: result.state === 'ok' ? 'secondary' : 'negative',
     textColor: 'white',
-    message: message,
-    icon: 'check',
+    message: result.message,
+    icon: result.state === 'ok' ? 'check' : 'error_outline',
     position: 'top',
     timeout: 2500,
   })
@@ -83,6 +82,7 @@ const reset = () => {
 watchEffect(async () => {
   if (!props.userId) {
     isEdit.value = false
+    feedbacks.value = []
 
     reset()
   } else {
@@ -102,7 +102,7 @@ watchEffect(async () => {
 </script>
 <template>
   <q-card class="q-ma-md user-create__card">
-    <q-card-section>
+    <q-card-section class='user-create__section'>
       <q-form
         ref="userForm"
         class="user-create__form"
@@ -153,13 +153,21 @@ watchEffect(async () => {
       </q-form>
     </q-card-section>
 
-    <q-card-actions>
+    <q-card-actions class='user-create__actions'>
       <div
-        :visibility="feedback ? 'visible' : 'none'"
+        v-if='feedbacks.length'
         class="user-create__feedback text-caption text-weight-light"
       >
-        <q-icon v-show="feedback" name="warning_amber" class="q-pr-md" />
-        {{ feedback }}
+        <q-list dense>
+          <q-item v-for='feedback in feedbacks' :key='feedback'>
+            <q-item-section avatar>
+              <q-icon v-show="feedback.length" name="circle" size='0.8em' class="q-pr-md" color='red' />
+            </q-item-section>
+            <q-item-section style='color: red'>
+              {{ feedback }}
+            </q-item-section>
+          </q-item>
+        </q-list>
       </div>
 
       <q-btn
@@ -179,12 +187,15 @@ watchEffect(async () => {
 }
 
 .user-create__feedback {
-  height: 1rem;
   width: 100%;
   color: $primary;
   margin-top: 10px;
   clear: both;
   margin-bottom: 20px;
+}
+
+.user-create__section {
+  padding-bottom: 0;
 }
 
 .user-create__show-pwd {
