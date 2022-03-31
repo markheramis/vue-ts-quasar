@@ -22,6 +22,7 @@ declare namespace User {
     first_name: string
     last_name: string
     email: string
+    phone_number: string
     date_of_birth?: Date
     created_at: Date
     updated_at: Date
@@ -30,7 +31,8 @@ declare namespace User {
   interface Account {
     username: string
     password: string
-    default_auth_factor: string
+    default_auth_factor: 
+      'sms' | 'voice' | 'authenticator' | 'email'
     authy_id: number
     authy_enabled: number
     authy_verified: number
