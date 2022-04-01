@@ -26,7 +26,13 @@
       "boot/*": ["src/boot/*"],
       "stores/*": ["src/stores/*"]
     },
-    "types": ["@types/node", "@quasar/app-vite", "vitest/globals"]
+    "types": [
+      "@types/node",
+      "@quasar/app-vite",
+      "vitest/globals",
+      "@vue/test-utils",
+      "@types/lodash"
+    ]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["node_modules", "dist", "**/*.js"]

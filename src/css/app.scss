@@ -1,1 +1,28 @@
 // app global css in SCSS form
+@import 'nprogress/nprogress.css';
+
+.main-layout__top-header {
+  // backdrop-filter: blur(7px);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#nprogress {
+  .bar {
+    background: $dark !important;
+  }
+
+  .peg {
+    box-shadow: 0 0 10px $dark, 0 0 5px $dark;
+  }
+
+  .spinner-icon {
+    border-top-color: $dark;
+    border-left-color: $dark;
+  }
+}
+
+.router-active-link__custom--parent,
+.router-active-link__custom--child {
+  color: #640100;
+  background: transparent;
+}

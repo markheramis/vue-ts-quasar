@@ -11,7 +11,7 @@
 const { configure } = require('quasar/wrappers')
 const path = require('path')
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   return {
     eslint: {
       // fix: true,
@@ -28,7 +28,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: [],
+    boot: ['axios', 'navGuard', 'platformDetect'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -49,6 +49,10 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
+      env:
+        process.env.NODE_ENV === 'development'
+          ? require('dotenv').config({ path: './.env.development' }).parsed
+          : require('dotenv').config({ path: './.env.production' }).parsed,
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node14',
@@ -62,6 +66,7 @@ module.exports = configure(function (/* ctx */) {
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // publicPath: '/',
+      // publicPath: '/vue-ts-quasar',
       // analyze: true,
       // env: {},
       env: require('dotenv').config().parsed,
@@ -77,9 +82,11 @@ module.exports = configure(function (/* ctx */) {
       // ]
       // extendViteConf (viteConf) {},
       extendViteConf: (config) => {
+        config.build.target = 'esnext'
         config.resolve.alias = {
           '@': path.join(__dirname, 'src'),
           app: path.join(__dirname, '.'),
+          boot: path.join(__dirname, './src/boot'),
           src: path.join(__dirname, 'src'),
           pages: path.join(__dirname, 'src/pages'),
           components: path.join(__dirname, 'src/components'),
@@ -98,17 +105,43 @@ module.exports = configure(function (/* ctx */) {
             /* Global imports to register
              * into the app.
              */
-            imports: ['vue', 'pinia'],
+            imports: ['vue', 'vue-router', 'pinia'],
             dts: './src/auto-imports.d.ts',
           },
         ],
+        /*
+        [
+          'vite-plugin-top-level-await',
+          {
+            // The export name of top-level await promise for each chunk module
+            promiseExportName: "__tla",
+            // The function to generate import names of top-level await promise in each chunk module
+            promiseImportName: i => `__tla_${i}`
+          }
+        ],
+        */
       ],
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
-      // https: true
+      https: true,
       open: false, // opens browser window automatically
+      vueDevtools: true,
+      port: ctx.mode.spa ? process.env.DEV_PORT : 5050,
+      proxy: {
+        [process.env.SERVER_BASEURL]: {
+          target: `
+          ${process.env.SERVER_PROTOCOL}://
+          ${process.env.SERVER_URL}:
+          ${process.env.SERVER_PORT} 
+          ${process.env.SERVER_BASEURL}
+          `.replace(/\s+/g, ''),
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(process.env.SERVER_BASEURL, ''),
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -126,7 +159,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ['Cookies', 'LocalStorage', 'SessionStorage', 'Notify'],
     },
 
     // animations: 'all', // --- includes all animations
