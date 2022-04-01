@@ -1,4 +1,6 @@
 name: "Build Test"
+on:
+  push
 jobs:
   releasee:
     name: build
