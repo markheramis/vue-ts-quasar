@@ -1,6 +1,9 @@
 name: "Build Test"
 on:
   push
+strategy:
+  matrix:
+    node: [10, 12, 14, 16]
 jobs:
   releasee:
     name: build
@@ -9,8 +12,8 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2.1.1
       - name: node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: ${{ matrix.node }}
       - name: "install"
         run: yarn install
