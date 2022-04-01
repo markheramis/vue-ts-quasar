@@ -1,13 +1,14 @@
 name: "Build Test"
 on:
   push
-strategy:
-  matrix:
-    node: [10, 12, 14, 16]
+
 jobs:
-  releasee:
+  build_test:
     name: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [10, 12, 14, 16]
     steps:
       - name: checkout
         uses: actions/checkout@v2.1.1
@@ -16,4 +17,4 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: "install"
-        run: yarn install
+        run: npm install
