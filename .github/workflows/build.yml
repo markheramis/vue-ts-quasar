@@ -1,0 +1,18 @@
+name: "release"
+on:
+  push:
+    branches:
+      - master
+jobs:
+  releasee:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2.1.1
+      - name: node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: "install"
+        run: yarn install
