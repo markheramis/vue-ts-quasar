@@ -34,3 +34,6 @@ yarn-error.log*
 
 # Vitest directories and files
 coverage
+
+.env.development
+.env.production
